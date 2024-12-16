@@ -9,22 +9,27 @@ const { state } = store( 'simple-interactive-blocks', {
 		term: null,
 		result: null
 	},
+	callbacks: {
+		setfocus: () => {
+			const context = getContext();
+			document.getElementById(context.inputID).focus()
+		},
+		init: (event) => {
+			// scrollList(event)
+		}
+	},
 	actions: {
 		search: (event) => {
 			const context = getContext();
-			state.term = event.currentTarget.value
-			if ( state.term.length >= 3 ) {
+			if ( event.currentTarget.value !== state.term && event.currentTarget.value.length >= 3) {
+				state.term = event.currentTarget.value
 				search_products( state.term )
-			} else {
+			} else if ( event.currentTarget.value !== state.term ) {
 				context.showResult = false
 				state.result       = null
+			} else if ( event.currentTarget.value.length >= 3 ) {
+				scrollList(event)
 			}
-		},
-		setfocus: () => {
-			const context = getContext();
-			// console.log(context.inputID)
-			// console.log("init")
-			document.getElementById(context.inputID).focus()
 		}
 	}
 } );
@@ -40,11 +45,49 @@ const search_products = async( term ) => {
 	// search_columns=post_title - Seach just on post_title
 	// _fields=id,title,link,_links,_embedded - Just get id, title and embed fields
 	var url = `?rest_route=/wp/v2/posts&_embed&search_columns=post_title&_fields=id,title,link,_links,_embedded&search=${term}`
-
 	const posts = await fetch(url);
-	const x = await posts.json()
-	
-	context.posts = x
-
-	console.log(context.posts)
+	context.posts = await posts.json()
 }
+
+
+const scrollList = (event) => {
+	const context = getContext();
+	const list = document.getElementById(context.resultID);
+	const maininput = document.getElementById(context.inputID);
+
+	document.onkeydown = function() {
+		if( list.hasChildNodes() ) {
+			if ( event.key ===  'ArrowDown' || event.key ===  'ArrowUp' ) {
+				event.stopPropagation()
+				event.preventDefault()
+
+				switch (event.key) {
+					case 'ArrowDown':
+						console.log("Arrow Down")
+						break
+					case 'ArrowUp':
+						console.log("Arrow Up")
+						if ( document.activeElement == (maininput || list)) { break; }
+						else { document.activeElement.parentNode.previousSibling.firstChild.focus(); }
+						break
+				}
+			}
+
+		}
+	}
+
+	// 	document.onkeydown = function(e) {
+	// 		console.log(e.keyCode)
+
+	// 		switch (e.keyCode) {
+	// 			case 38:
+	// 				if ( document.activeElement == (maininput || first)) { break; }
+	// 				else { document.activeElement.parentNode.previousSibling.firstChild.focus(); }
+	// 				break;
+	// 			case 40: // Press down.
+	// 				if ( document.activeElement == maininput) { list.firstChild.focus(); } 
+	// 				else { document.activeElement.parentNode.nextSibling.firstChild.focus(); }
+	// 				break;
+	// 		}
+	// 	}
+} 

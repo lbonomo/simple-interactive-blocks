@@ -11,8 +11,8 @@
  */
 
 // Generates a unique id for aria-controls.
-$id_input  = wp_unique_id( 'p-' );
-$id_search = wp_unique_id( 's-' );
+$id_input  = wp_unique_id( 'input-' );
+$id_result = wp_unique_id( 'result-' );
 
 // Adds the global state.
 wp_interactivity_state(
@@ -26,6 +26,7 @@ wp_interactivity_state(
 $content = array( 
 	'showResult' => false,
 	'inputID' => $id_input,
+	'resultID' => $id_result,
 	'posts' => array()
 );
 
@@ -35,9 +36,14 @@ $content = array(
 	<?php echo get_block_wrapper_attributes(); ?>
 	data-wp-interactive="simple-interactive-blocks"
 	<?php echo wp_interactivity_data_wp_context( $content ); ?>
-	data-wp-init="actions.setfocus"
 >
-	<form role="search" method="get" action="">
+	<form 
+		role="search" 
+		method="get" 
+		action=""
+		data-wp-init--focus="callbacks.setfocus"
+		
+		>
 		<input
 		type="search"
 		placeholder="<?php echo esc_attr( $attributes['placeholder'] ); ?>"
@@ -49,22 +55,21 @@ $content = array(
 		/>
 	</form>
 
-	<div
-		id="<?php echo esc_attr( $id_search ); ?>" 
+	<ul 
+		id="<?php echo esc_attr( $id_result ); ?>"
 		data-wp-bind--hidden="!context.showResult"
 		class="search-results"
+
 	>
-		<ul>
-			<template data-wp-each--post="context.posts" >
-				<li>
-					<a 
-						data-wp-key="context.post.id"
-						data-wp-text="context.post.title.rendered"
-						data-wp-bind--href="context.post.link">
-					</a>
-				</li>
-			</template>
-		</ul>
-	</div>
+		<template data-wp-each--post="context.posts" >
+			<li tabindex="-1">
+				<a 
+					data-wp-key="context.post.id"
+					data-wp-text="context.post.title.rendered"
+					data-wp-bind--href="context.post.link">
+				</a>
+			</li>
+		</template>
+	</ul>
 
 </div>
