@@ -2,6 +2,7 @@
 <ruleset name="coding-style">
 	<description>Coding style description</description>
 	<arg value="ps"/>
+	<arg name="colors" />
 	<!-- Check up to 8 files simultaneously. -->
 	<arg name="parallel" value="8"/>
 	<!-- Check PHP files only. JavaScript and CSS files are checked separately using the @wordpress/scripts package. -->
@@ -13,6 +14,9 @@
 	<file>./simple-interactive-blocks.php</file>
 
 	<rule ref="WordPress"/>
+	<rule ref="WordPress-Core"/>
+	<rule ref="WordPress-Docs"/>
+	<rule ref="WordPress-Extra"/>
 	<rule ref="Security"/>
 
 </ruleset>

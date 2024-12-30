@@ -31,21 +31,22 @@ $content = array(
 	'posts'      => array(),
 );
 
+error_log( 'Running render.php' );
+
 ?>
 
 <div
-	<?php echo esc_attr( get_block_wrapper_attributes() ); ?>
 	data-wp-interactive="simple-interactive-blocks"
-	<?php echo esc_attr( wp_interactivity_data_wp_context( $content ) ); ?>
+	<?php echo wp_kses_data( get_block_wrapper_attributes() ); ?>
+	<?php echo wp_kses_data( wp_interactivity_data_wp_context( $content ) ); ?>
 >
 	<form 
 		role="search" 
-		method="get" 
+		method="get"
 		action=""
-		data-wp-init--focus="callbacks.setfocus"
-		
+		data-wp-run="actions.setfocus"
 		>
-		<input
+		<input 
 		type="search"
 		placeholder="<?php echo esc_attr( $attributes['placeholder'] ); ?>"
 		autocomplete="off"
@@ -60,7 +61,6 @@ $content = array(
 		id="<?php echo esc_attr( $id_result ); ?>"
 		data-wp-bind--hidden="!context.showResult"
 		class="search-results"
-
 	>
 		<template data-wp-each--post="context.posts" >
 			<li tabindex="-1">

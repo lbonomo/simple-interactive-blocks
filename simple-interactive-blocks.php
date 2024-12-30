@@ -24,7 +24,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @see https://developer.wordpress.org/reference/functions/register_block_type/
  */
-function simple_interactive_blocks_simple_interactive_blocks_block_init() {
+function simple_interactive_blocks_search_init() {
 	register_block_type_from_metadata( __DIR__ . '/build' );
 }
-add_action( 'init', 'simple_interactive_blocks_simple_interactive_blocks_block_init' );
+add_action( 'init', 'simple_interactive_blocks_search_init' );

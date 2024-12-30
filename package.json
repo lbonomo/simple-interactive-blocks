@@ -13,7 +13,8 @@
 		"packages-update": "wp-scripts packages-update",
 		"plugin-zip": "wp-scripts plugin-zip",
 		"start": "wp-scripts start --experimental-modules",
-		"env": "wp-env"
+		"env": "wp-env",
+		"log": "tail -f $(npm --silent run env install-path 2> /dev/null)/WordPress/wp-content/debug.log"
 	},
 	"files": [
 		"[^.]*"

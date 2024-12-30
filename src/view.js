@@ -1,39 +1,39 @@
 /**
  * WordPress dependencies
  */
-import { store, getContext, setState } from '@wordpress/interactivity';
+import { store, getContext, setState, getElement } from '@wordpress/interactivity';
 
 
-const { state } = store( 'simple-interactive-blocks', {
-	state: {
-		term: null,
-		result: null
-	},
-	callbacks: {
-		setfocus: () => {
-			const context = getContext();
-			document.getElementById(context.inputID).focus()
+const { state } = store( 
+	'simple-interactive-blocks',
+	{
+		state: {
+			term: null,
+			result: null
 		},
-		init: (event) => {
-			// scrollList(event)
+		actions: {
+			search: (event) => {
+				const context = getContext()
+				// console.log(context.txt)
+				console.log(state)
+				if ( event.currentTarget.value !== state.term && event.currentTarget.value.length >= 3) {
+					state.term = event.currentTarget.value
+					search_products( state.term )
+				} else if ( event.currentTarget.value !== state.term ) {
+					context.showResult = false
+					state.result       = null
+				} else if ( event.currentTarget.value.length >= 3 ) {
+					scrollList(event)
+				}
+			},
+			setfocus: () => {
+				const context = getContext()
+				let search_editor = document.getElementById(context.inputID)
+				search_editor.focus()
+			},
 		}
-	},
-	actions: {
-		search: (event) => {
-			const context = getContext();
-			if ( event.currentTarget.value !== state.term && event.currentTarget.value.length >= 3) {
-				state.term = event.currentTarget.value
-				search_products( state.term )
-			} else if ( event.currentTarget.value !== state.term ) {
-				context.showResult = false
-				state.result       = null
-			} else if ( event.currentTarget.value.length >= 3 ) {
-				scrollList(event)
-			}
-		}
-	}
-} );
-
+	} 
+);
 
 const search_products = async( term ) => {
 	const context = getContext();
@@ -49,32 +49,31 @@ const search_products = async( term ) => {
 	context.posts = await posts.json()
 }
 
-
 const scrollList = (event) => {
 	const context = getContext();
 	const list = document.getElementById(context.resultID);
 	const maininput = document.getElementById(context.inputID);
 
-	document.onkeydown = function() {
-		if( list.hasChildNodes() ) {
-			if ( event.key ===  'ArrowDown' || event.key ===  'ArrowUp' ) {
-				event.stopPropagation()
-				event.preventDefault()
+	// document.onkeydown = function() {
+	// 	if( list.hasChildNodes() ) {
+	// 		if ( event.key ===  'ArrowDown' || event.key ===  'ArrowUp' ) {
+	// 			event.stopPropagation()
+	// 			event.preventDefault()
 
-				switch (event.key) {
-					case 'ArrowDown':
-						console.log("Arrow Down")
-						break
-					case 'ArrowUp':
-						console.log("Arrow Up")
-						if ( document.activeElement == (maininput || list)) { break; }
-						else { document.activeElement.parentNode.previousSibling.firstChild.focus(); }
-						break
-				}
-			}
+	// 			switch (event.key) {
+	// 				case 'ArrowDown':
+	// 					console.log("Arrow Down")
+	// 					break
+	// 				case 'ArrowUp':
+	// 					console.log("Arrow Up")
+	// 					if ( document.activeElement == (maininput || list)) { break; }
+	// 					else { document.activeElement.parentNode.previousSibling.firstChild.focus(); }
+	// 					break
+	// 			}
+	// 		}
 
-		}
-	}
+	// 	}
+	// }
 
 	// 	document.onkeydown = function(e) {
 	// 		console.log(e.keyCode)
