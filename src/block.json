@@ -52,6 +52,10 @@
 		"placeholder": {
 			"type": "string",
 			"default": "Que estás buscando?"
+		},
+		"set_focus": {
+			"type": "boolean",
+			"default": false
 		}
 	},
 	"textdomain": "simple-interactive-blocks",

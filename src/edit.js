@@ -17,7 +17,7 @@ import { useBlockProps, InspectorControls } from '@wordpress/block-editor';
  * Core components.
  */
 
-import { TextControl, PanelBody } from '@wordpress/components';
+import { TextControl, PanelBody, CheckboxControl } from '@wordpress/components';
 
 /**
  * The edit function describes the structure of your block in the context of the
@@ -33,10 +33,20 @@ import { TextControl, PanelBody } from '@wordpress/components';
  */
 export default function Edit( { attributes, setAttributes } ) {
 	const blockProps = useBlockProps();
-	const { placeholder } = attributes;
+	const { placeholder, set_focus  } = attributes;
+	
 	function onChangeTextField( newValue ) {
 		setAttributes( { placeholder: newValue } );
 	}
+
+	function onChangeCheckbox( value ) {
+		if ( value ) {
+			setAttributes( { set_focus: true } );
+		} else {
+			setAttributes( { set_focus: false } );
+		}
+	}
+
 
 	return (
 		<>
@@ -48,6 +58,12 @@ export default function Edit( { attributes, setAttributes } ) {
 						help="Set the search placeholder text"
 						onChange={ onChangeTextField }
 						value={ placeholder }
+					/>
+					<CheckboxControl
+						help="Set focus on input field?"
+						label="Set focus?"
+						checked={ set_focus }
+						onChange={ onChangeCheckbox }
 					/>
 				</PanelBody>
 			</InspectorControls>

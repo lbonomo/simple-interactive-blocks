@@ -28,8 +28,11 @@ const { state } = store(
 			},
 			setfocus: () => {
 				const context = getContext()
-				let search_editor = document.getElementById(context.inputID)
-				search_editor.focus()
+				if ( context.setFocus ) {
+					console.log("Set focus")
+					let search_editor = document.getElementById(context.inputID)
+					search_editor.focus()
+				}
 			},
 		}
 	} 

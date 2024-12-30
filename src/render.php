@@ -29,9 +29,8 @@ $content = array(
 	'inputID'    => $id_input,
 	'resultID'   => $id_result,
 	'posts'      => array(),
+	'setFocus'   => $attributes['set_focus'],
 );
-
-error_log( 'Running render.php' );
 
 ?>
 
