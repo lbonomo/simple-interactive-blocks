@@ -7,7 +7,7 @@
     },
     "scripts": {
         "phpcs": "phpcs",
-		"phpmd": "phpmd src/*.php ansi ./phpmd.xml"
+		"phpmd": "phpmd --cache-strategy timestamp src/*.php ansi ./phpmd.xml"
     },
     "config": {
         "allow-plugins": {

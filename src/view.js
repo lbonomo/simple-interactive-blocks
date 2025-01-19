@@ -1,20 +1,24 @@
 /**
  * WordPress dependencies
  */
+import "preact/devtools";
+import "preact/debug";
+import { render } from 'preact';
 import { store, getContext, setState, getElement } from '@wordpress/interactivity';
-
 
 const { state } = store( 
 	'simple-interactive-blocks',
 	{
 		state: {
 			term: null,
-			result: null
+			result: null,
+			posts: null
 		},
 		actions: {
 			search: (event) => {
+				// Search posts.
 				const context = getContext()
-				// console.log(context.txt)
+				console.log(context.posts)
 				console.log(state)
 				if ( event.currentTarget.value !== state.term && event.currentTarget.value.length >= 3) {
 					state.term = event.currentTarget.value
@@ -27,9 +31,9 @@ const { state } = store(
 				}
 			},
 			setfocus: () => {
+				// Put focus on the search input.
 				const context = getContext()
 				if ( context.setFocus ) {
-					console.log("Set focus")
 					let search_editor = document.getElementById(context.inputID)
 					search_editor.focus()
 				}
@@ -50,6 +54,7 @@ const search_products = async( term ) => {
 	var url = `?rest_route=/wp/v2/posts&_embed&search_columns=post_title&_fields=id,title,link,_links,_embedded&search=${term}`
 	const posts = await fetch(url);
 	context.posts = await posts.json()
+	state.posts = await posts.json()
 }
 
 const scrollList = (event) => {
