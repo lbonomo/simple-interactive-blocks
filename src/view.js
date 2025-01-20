@@ -3,8 +3,7 @@
  */
 import "preact/devtools";
 import "preact/debug";
-import { render } from 'preact';
-import { store, getContext, setState, getElement } from '@wordpress/interactivity';
+import { store, getContext } from '@wordpress/interactivity';
 
 const { state } = store( 
 	'simple-interactive-blocks',
@@ -12,22 +11,25 @@ const { state } = store(
 		state: {
 			term: null,
 			result: null,
-			posts: null
+			currentLI: 0
 		},
 		actions: {
 			search: (event) => {
 				// Search posts.
 				const context = getContext()
-				console.log(context.posts)
-				console.log(state)
+				// console.log(context.posts)
+				// if key is up or down and showResult = true.
+				if ( context.showResult && ( event.key ===  'ArrowDown' || event.key ===  'ArrowUp' ) ) {
+					scrollList(event);
+				}
+
 				if ( event.currentTarget.value !== state.term && event.currentTarget.value.length >= 3) {
 					state.term = event.currentTarget.value
 					search_products( state.term )
 				} else if ( event.currentTarget.value !== state.term ) {
+					// TODO. Check this else if.
 					context.showResult = false
 					state.result       = null
-				} else if ( event.currentTarget.value.length >= 3 ) {
-					scrollList(event)
 				}
 			},
 			setfocus: () => {
@@ -38,6 +40,9 @@ const { state } = store(
 					search_editor.focus()
 				}
 			},
+			scroll: (event) => {
+				scrollList(event);
+			}
 		}
 	} 
 );
@@ -54,47 +59,38 @@ const search_products = async( term ) => {
 	var url = `?rest_route=/wp/v2/posts&_embed&search_columns=post_title&_fields=id,title,link,_links,_embedded&search=${term}`
 	const posts = await fetch(url);
 	context.posts = await posts.json()
-	state.posts = await posts.json()
 }
 
 const scrollList = (event) => {
-	const context = getContext();
-	const list = document.getElementById(context.resultID);
-	const maininput = document.getElementById(context.inputID);
+	const context = getContext()
+	const listItems = document.querySelectorAll(".search-results li")
+ 	const seachinput = document.getElementById(context.inputID)
 
-	// document.onkeydown = function() {
-	// 	if( list.hasChildNodes() ) {
-	// 		if ( event.key ===  'ArrowDown' || event.key ===  'ArrowUp' ) {
-	// 			event.stopPropagation()
-	// 			event.preventDefault()
+	if ( event.key ===  'ArrowDown' || event.key ===  'ArrowUp' ) {
+		event.stopPropagation()
+		event.preventDefault()
 
-	// 			switch (event.key) {
-	// 				case 'ArrowDown':
-	// 					console.log("Arrow Down")
-	// 					break
-	// 				case 'ArrowUp':
-	// 					console.log("Arrow Up")
-	// 					if ( document.activeElement == (maininput || list)) { break; }
-	// 					else { document.activeElement.parentNode.previousSibling.firstChild.focus(); }
-	// 					break
-	// 			}
-	// 		}
-
-	// 	}
-	// }
-
-	// 	document.onkeydown = function(e) {
-	// 		console.log(e.keyCode)
-
-	// 		switch (e.keyCode) {
-	// 			case 38:
-	// 				if ( document.activeElement == (maininput || first)) { break; }
-	// 				else { document.activeElement.parentNode.previousSibling.firstChild.focus(); }
-	// 				break;
-	// 			case 40: // Press down.
-	// 				if ( document.activeElement == maininput) { list.firstChild.focus(); } 
-	// 				else { document.activeElement.parentNode.nextSibling.firstChild.focus(); }
-	// 				break;
-	// 		}
-	// 	}
+		switch (event.key) {
+			case 'ArrowDown':
+				if ( document.activeElement == seachinput) {
+					console.log("Estoy en el edit")
+					// list.firstChild.focus();
+					state.currentLI = 0; // Increase counter
+					listItems[state.currentLI].classList.add("highlight");
+					listItems[state.currentLI].focus() 
+				} else {
+					listItems[state.currentLI].classList.remove("highlight");
+					state.currentLI = state.currentLI < listItems.length-1 ? ++state.currentLI : listItems.length-1;
+					listItems[state.currentLI].classList.add("highlight");
+					listItems[state.currentLI].focus() 
+				}
+				break
+			case 'ArrowUp':
+				console.log("Arrow Up")
+				listItems[state.currentLI].classList.remove("highlight");
+				state.currentLI = state.currentLI > 0 ? --state.currentLI : 0
+				listItems[state.currentLI].classList.add("highlight")
+				listItems[state.currentLI].focus()
+		}
+	}
 } 

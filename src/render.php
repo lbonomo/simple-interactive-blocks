@@ -59,6 +59,7 @@ $content = array(
 	<ul 
 		id="<?php echo esc_attr( $id_result ); ?>"
 		data-wp-bind--hidden="!context.showResult"
+		data-wp-on--keyup="actions.scroll"
 		class="search-results"
 	>
 		<template data-wp-each--post="context.posts" >
