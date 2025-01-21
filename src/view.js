@@ -3,20 +3,17 @@
  */
 import "preact/devtools";
 import "preact/debug";
-import { store, getContext } from "@wordpress/interactivity";
+import { store, getContext, setContext } from "@wordpress/interactivity";
 
 const { state } = store("simple-interactive-blocks", {
   state: {
     term: null,
-    result: null,
     currentLI: 0,
   },
   actions: {
     search: (event) => {
       // Search posts.
       const context = getContext();
-      // console.log(context.posts)
-      // if key is up or down and showResult = true.
       if (
         context.showResult &&
         (event.key === "ArrowDown" || event.key === "ArrowUp")
@@ -33,7 +30,6 @@ const { state } = store("simple-interactive-blocks", {
       } else if (event.currentTarget.value !== state.term) {
         // TODO. Check this else if.
         context.showResult = false;
-        state.result = null;
       }
     },
     setfocus: () => {
@@ -59,28 +55,26 @@ const search_products = async (term) => {
   // search=${term} - Term to seach.
   // search_columns=post_title - Seach just on post_title
   // _fields=id,title,link,_links,_embedded - Just get id, title and embed fields
-  var url = `?rest_route=/wp/v2/posts&_embed&search_columns=post_title&_fields=id,title,link,_links,_embedded&search=${term}`;
+  // per_page - limit to 5 posts.
+  var url = `?rest_route=/wp/v2/posts&_embed&search_columns=post_title&_fields=id,title,link,_links,_embedded&status=publish&per_page=5&search=${term}`;
   const posts = await fetch(url);
   context.posts = await posts.json();
 };
 
 const scrollList = (event) => {
+  event.stopPropagation();
+  event.preventDefault();
+
   const context = getContext();
   const listItems = document.querySelectorAll(".search-results li");
   const seachinput = document.getElementById(context.inputID);
+  const keys = ["ArrowDown", "ArrowUp", "Enter", "Escape", "Tab"];
 
-  if (
-    event.key === "ArrowDown" ||
-    event.key === "ArrowUp" ||
-    event.key === "Enter"
-  ) {
-    event.stopPropagation();
-    event.preventDefault();
-
+  if (keys.includes(event.key)) {
     switch (event.key) {
       case "ArrowDown":
+      case "Tab":
         if (document.activeElement == seachinput) {
-          console.log("Estoy en el edit");
           // list.firstChild.focus();
           state.currentLI = 0; // Increase counter
           listItems[state.currentLI].classList.add("highlight");
@@ -96,15 +90,19 @@ const scrollList = (event) => {
         }
         break;
       case "ArrowUp":
-        console.log("Arrow Up");
         listItems[state.currentLI].classList.remove("highlight");
         state.currentLI = state.currentLI > 0 ? --state.currentLI : 0;
         listItems[state.currentLI].classList.add("highlight");
         listItems[state.currentLI].children[0].focus();
         break;
       case "Enter":
-        let link = listItems[currentLI].children[0];
-        link.click();
+        listItems[currentLI].children[0].click();
+        break;
+      case "Escape":
+        context.posts = [];
+        context.showResult = false;
+        seachinput.value = "";
+        seachinput.focus();
         break;
       default:
         console.log(event.key);

@@ -75,7 +75,7 @@
 		position: relative;
 		width: 100%;
 		border: 1px solid rgba(210, 210, 210, 0.5);
-		background: lightgray;
+		background: rgba(211, 211, 211, 0.9);
 		z-index: 100;
 		list-style: none;
 		max-height: 400px;
@@ -89,11 +89,11 @@
 			padding: 1rem;
 			a {
 				text-decoration: none;
-				color: darkgrey;
+				color: rgb(114, 114, 114);
 			}
 			&:hover,
 			&.highlight {
-				background-color: #f2f2f2;	
+				background-color: rgba(247, 247, 247, 0.75);
 				a {
 					text-decoration: none;
 					color: black;

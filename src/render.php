@@ -63,11 +63,12 @@ $content = array(
 		class="search-results"
 	>
 		<template data-wp-each--post="context.posts" >
-			<li tabindex="-1">
+			<li>
 				<a 
 					data-wp-key="context.post.id"
+					data-wp-bind--href="context.post.link"
 					data-wp-text="context.post.title.rendered"
-					data-wp-bind--href="context.post.link">
+					>
 				</a>
 			</li>
 		</template>
