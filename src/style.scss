@@ -10,10 +10,14 @@
 	position: relative;
 	height: 50px;
 	overflow: visible;
+	margin: 0.4rem;
 
 	form {
 		font-size: 18px;
 		position: relative;
+		display: flex;
+		justify-content: space-between;
+		gap: 1rem;
 
 		&::before {
 			// content: url(path/to/your.svg);
@@ -37,12 +41,11 @@
 			padding: 12px 12px 12px 32px;
 			// background-color: #d2d2d2;
 			// color: #43454b;
-			border: 0;
+			border: 1px solid lightgray;
 			-webkit-appearance: none;
 			box-sizing: border-box;
 			font-weight: 400;
 			&:focus {
-				border: unset;
 				outline-width: unset;
 				outline-style: unset;
 			}
@@ -50,18 +53,9 @@
 		
 		button[type=submit] {
 			border:0;
-			clip:rect(1px, 1px, 1px, 1px);
-			-webkit-clip-path:inset(50%);
-			clip-path:inset(50%);
-			height:1px;
-			margin:-1px;
-			overflow:hidden;
-			padding:0;
-			position:absolute;
-			width:1px;
-			word-wrap:normal !important;
-			top:0;
-			left:0
+			padding: 0.5rem;
+			text-wrap: nowrap;
+			width: max-content;
 		}
 	}
 
@@ -91,8 +85,7 @@
 				text-decoration: none;
 				color: rgb(114, 114, 114);
 			}
-			&:hover,
-			&.highlight {
+			&:focus-within {
 				background-color: rgba(247, 247, 247, 0.75);
 				a {
 					text-decoration: none;
@@ -100,11 +93,10 @@
 					&:focus,
 					&:focus-visible {
 						outline: none;
+						border: none;
 					}
 				}
 			}
-			
-
 		}
 	}
 }

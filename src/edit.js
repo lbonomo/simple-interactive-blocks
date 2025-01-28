@@ -73,6 +73,7 @@ export default function Edit( { attributes, setAttributes } ) {
 			<div { ...blockProps } >
 				<form role="search" method="get" action="">
 					<input type="search" placeholder={ placeholder } disabled />
+					<button aria-label="Search" type="submit"> Search </button>
 				</form>
 			</div>
 			{/* Block */}

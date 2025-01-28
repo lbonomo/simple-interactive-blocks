@@ -54,6 +54,14 @@ $content = array(
 		name="s"
 		data-wp-on--keyup="actions.search"
 		/>
+
+		<button 
+			aria-label="Search" 
+			type="submit"
+			title="<?php echo esc_attr_x( 'Show all results', 'Submit button title text', 'simple-interactive-blocks' ); ?>"
+			>
+			<?php echo esc_attr_x( 'Show all', 'Submit button txt', 'simple-interactive-blocks' ); ?>
+		</button>
 	</form>
 
 	<ul 
