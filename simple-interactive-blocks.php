@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       Simple interactive blocks
  * Description:       An interactive block with the Interactivity API.
- * Version:           0.1.0
+ * Version:           1.0.0
  * Requires at least: 6.6
  * Requires PHP:      7.2
  * Author:            The WordPress Contributors
